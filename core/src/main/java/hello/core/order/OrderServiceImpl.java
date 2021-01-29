@@ -9,15 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-    /*
-     이렇게 생성하는 경우 new 객체 생성하면 nullPointException이 발생한다.
-     테스트 하기 위해서는 다시 setter 메서드를 만들어주어야한다.
-     */
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;
 
-    @Autowired
-    private DiscountPolicy discountPolicy;
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy  = discountPolicy;
+    }
+
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
