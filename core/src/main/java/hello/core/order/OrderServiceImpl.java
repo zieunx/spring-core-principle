@@ -9,11 +9,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository;
-    private final DiscountPolicy discountPolicy;
+    private MemberRepository memberRepository;
+    private DiscountPolicy discountPolicy;
 
     @Autowired
+    public void setMemberRepository(MemberRepository memberRepository) {
+        System.out.println("2. memberRepository = " + memberRepository);
+        this.memberRepository = memberRepository;
+    }
+
+    @Autowired
+    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+        System.out.println("2. discountPolicy = " + discountPolicy);
+        this.discountPolicy = discountPolicy;
+    }
+
+    @Autowired // 생성자가 딱 1개만 있으면 @Autowired 를 생략해도 된다.
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        System.out.println("1. OrderServiceImpl.OrderServiceImpl");
         this.memberRepository = memberRepository;
         this.discountPolicy  = discountPolicy;
     }
