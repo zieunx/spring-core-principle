@@ -1,13 +1,23 @@
 package hello.core.order;
 
+import hello.core.discount.FixDiscountPolicy;
+import hello.core.member.Grade;
+import hello.core.member.Member;
+import hello.core.member.MemoryMemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class OrderServiceImplTest {
 
     @Test
     void createOrder() {
-        OrderServiceImpl orderService = new OrderServiceImpl();
-        // 생성자 주입은 컴파일부터 필요한 의존성 주입에 대해 개발자가 확인할 수 있다.
-        orderService.createOrder(1L, "itemA", 10000);
+        MemoryMemberRepository memoryMemberRepository = new MemoryMemberRepository();
+        memoryMemberRepository.save(new Member(1L, "name", Grade.VIP));
+
+        OrderServiceImpl orderService = new OrderServiceImpl(new MemoryMemberRepository(), new FixDiscountPolicy());
+        Order order = orderService.createOrder(1L, "itemA", 10000);
+
+        Assertions.assertThat(order.getDiscountPrice()).isEqualTo(1000);
+        // 순수한 자바 코드로 테스트 코드 상에서 필요한 구현체들은 조합하여 테스트 할 수 있다.
     }
 }
