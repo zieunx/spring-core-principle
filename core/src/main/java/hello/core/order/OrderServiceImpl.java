@@ -3,20 +3,18 @@ package hello.core.order;
 import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
+// final 을 가진 값으로 생성자를 만들어준다. (cmd + F12)
 @Component
 public class OrderServiceImpl implements OrderService {
 
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
-
-
-    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-        // final로 생성자주입이 되지 않은 빈에 대해 컴파일 시 알 수 있다.
-    }
-
+    // @Autowired 보다 더 편리한 @RequiredArgsConstructor !!
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
