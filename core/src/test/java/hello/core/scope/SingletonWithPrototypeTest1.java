@@ -1,6 +1,7 @@
 package hello.core.scope;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -31,27 +32,24 @@ public class SingletonWithPrototypeTest1 {
     void singletonClientUsePrototype() {
         AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(ClientBean.class, PrototypeBean.class);
 
-        // 1. ClientBean 가 생성자 호출할 때 PrototypeBean 을 스프링 컨테이너에 생성 요청한다.
-        //    생성 시점에 최초 생성하고 주입된다.
         ClientBean clientBean1 = ac.getBean(ClientBean.class);
         int count1 = clientBean1.logic();
         assertThat(count1).isEqualTo(1);
 
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int count2 = clientBean2.logic();
-        assertThat(count2).isEqualTo(2);
+        assertThat(count2).isEqualTo(1);
     }
 
     @Scope("singleton")
     static class ClientBean {
-        private final PrototypeBean prototypeBean;
-
         @Autowired
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+        // ObjectProvider 는 어플리케이션컨텍스트에서 찾는 것이 아닌, 컨테이너에서 대신 찾아준다. (DL)
 
         public int logic() {
+            PrototypeBean prototypeBean = prototypeBeanProvider.getObject();
+
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
