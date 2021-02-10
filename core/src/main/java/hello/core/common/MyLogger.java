@@ -1,6 +1,7 @@
 package hello.core.common;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -8,9 +9,9 @@ import javax.annotation.PreDestroy;
 import java.util.UUID;
 
 
-// 로그를 출력하기 위한 클래스
+// ScopedProxyMode : 적용 대상이 class이기 때문에 TARGET_CLASS로 설정
 @Component
-@Scope(value = "request")
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class MyLogger {
 
     private String uuid;
